@@ -7,9 +7,12 @@
     "dev": "vite",
     "api": "cd server && npm run start",
     "dev:all": "concurrently \"npm run dev\" \"npm run api\"",
-    "build": "tsc && vite build",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "vite build",
+    "build:server": "cd server && npm install && npm run build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start:prod": "node server/dist/index.js"
   },
   "dependencies": {
     "@privy-io/react-auth": "^1.30.1",
