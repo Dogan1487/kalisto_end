@@ -1,1 +1,39 @@
- 
+name: Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+
+    - name: Install Dependencies
+      run: |
+        npm install
+        cd server && npm install && cd ..
+
+    - name: Build Client
+      run: npm run build:client
+      env:
+        VITE_PRIVY_APP_ID: ${{ secrets.VITE_PRIVY_APP_ID }}
+        VITE_RPC_URL: ${{ secrets.VITE_RPC_URL }}
+        VITE_API_URL: ${{ secrets.VITE_API_URL }}
+
+    - name: Build Server
+      run: npm run build:server
+      env:
+        QUICKNODE_RPC_URL: ${{ secrets.QUICKNODE_RPC_URL }}
+        PRIVY_APP_ID: ${{ secrets.PRIVY_APP_ID }}
+        PRIVY_APP_SECRET: ${{ secrets.PRIVY_APP_SECRET }} 
